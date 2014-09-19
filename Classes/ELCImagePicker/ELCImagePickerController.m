@@ -22,7 +22,7 @@
 - (id)initImagePicker
 {
     ELCAlbumPickerController *albumPicker = [[ELCAlbumPickerController alloc] initWithStyle:UITableViewStylePlain];
-    
+
     self = [super initWithRootViewController:albumPicker];
     if (self) {
         self.maximumImagesCount = 4;
@@ -90,7 +90,7 @@
 - (void)selectedAssets:(NSArray *)assets
 {
 	NSMutableArray *returnArray = [[NSMutableArray alloc] init];
-	
+
 	for(ELCAsset *elcasset in assets) {
         ALAsset *asset = elcasset.asset;
 		id obj = [asset valueForProperty:ALAssetPropertyType];
@@ -98,12 +98,12 @@
 			continue;
 		}
 		NSMutableDictionary *workingDictionary = [[NSMutableDictionary alloc] init];
-		
+
 		CLLocation* wgs84Location = [asset valueForProperty:ALAssetPropertyLocation];
 		if (wgs84Location) {
 			[workingDictionary setObject:wgs84Location forKey:ALAssetPropertyLocation];
 		}
-        
+
         [workingDictionary setObject:obj forKey:UIImagePickerControllerMediaType];
 
         //This method returns nil for assets from a shared photo stream that are not yet available locally. If the asset becomes available in the future, an ALAssetsLibraryChangedNotification notification is posted.
@@ -115,10 +115,10 @@
                 //defaultRepresentation returns image as it appears in photo picker, rotated and sized,
                 //so use UIImageOrientationUp when creating our image below.
                 UIImageOrientation orientation = UIImageOrientationUp;
-            
+
                 if (_returnsOriginalImage) {
                     imgRef = [assetRep fullResolutionImage];
-                    orientation = [assetRep orientation];
+                    orientation = (UIImageOrientation)[assetRep orientation];
                 } else {
                     imgRef = [assetRep fullScreenImage];
                 }
@@ -129,11 +129,11 @@
             }
 
             [workingDictionary setObject:[[asset valueForProperty:ALAssetPropertyURLs] valueForKey:[[[asset valueForProperty:ALAssetPropertyURLs] allKeys] objectAtIndex:0]] forKey:UIImagePickerControllerReferenceURL];
-            
+
             [returnArray addObject:workingDictionary];
         }
-		
-	}    
+
+	}
 	if (_imagePickerDelegate != nil && [_imagePickerDelegate respondsToSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:)]) {
 		[_imagePickerDelegate performSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:) withObject:self withObject:returnArray];
 	} else {

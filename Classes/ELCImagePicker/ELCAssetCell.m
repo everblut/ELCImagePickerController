@@ -28,10 +28,10 @@
 	if (self) {
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellTapped:)];
         [self addGestureRecognizer:tapRecognizer];
-        
+
         NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithCapacity:4];
         self.imageViewArray = mutableArray;
-        
+
         NSMutableArray *overlayArray = [[NSMutableArray alloc] initWithCapacity:4];
         self.overlayViewArray = overlayArray;
 	}
@@ -60,7 +60,7 @@
             UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:asset.asset.thumbnail]];
             [_imageViewArray addObject:imageView];
         }
-        
+
         if (i < [_overlayViewArray count]) {
             ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
             overlayView.hidden = asset.selected ? NO : YES;
@@ -78,12 +78,12 @@
 - (void)cellTapped:(UITapGestureRecognizer *)tapRecognizer
 {
     CGPoint point = [tapRecognizer locationInView:self];
-    int c = (int32_t)self.rowAssets.count;
+    int c = (int)self.rowAssets.count;
     CGFloat totalWidth = c * 75 + (c - 1) * 4;
     CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
-    
+
 	CGRect frame = CGRectMake(startX, 2, 75, 75);
-	
+
 	for (int i = 0; i < [_rowAssets count]; ++i) {
         if (CGRectContainsPoint(frame, point)) {
             ELCAsset *asset = [_rowAssets objectAtIndex:i];
@@ -107,21 +107,21 @@
 
 - (void)layoutSubviews
 {
-    int c = (int32_t)self.rowAssets.count;
+    int c = (int)self.rowAssets.count;
     CGFloat totalWidth = c * 75 + (c - 1) * 4;
     CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
-    
+
 	CGRect frame = CGRectMake(startX, 2, 75, 75);
-	
+
 	for (int i = 0; i < [_rowAssets count]; ++i) {
 		UIImageView *imageView = [_imageViewArray objectAtIndex:i];
 		[imageView setFrame:frame];
 		[self addSubview:imageView];
-        
+
         ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
         [overlayView setFrame:frame];
         [self addSubview:overlayView];
-		
+
 		frame.origin.x = frame.origin.x + frame.size.width + 4;
 	}
 }
